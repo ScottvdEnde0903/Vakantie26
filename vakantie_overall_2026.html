@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zomervakantie 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#fff;color:#1a1a1a;padding:1rem}
+:root{
+  --color-background-primary:#fff;
+  --color-background-secondary:#f5f4f0;
+  --color-text-primary:#1a1a1a;
+  --color-text-secondary:#6b6b6b;
+  --color-border-tertiary:rgba(0,0,0,0.12);
+  --color-border-secondary:rgba(0,0,0,0.22);
+  --color-border-primary:rgba(0,0,0,0.35);
+  --border-radius-md:8px;
+  --border-radius-lg:12px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --color-background-primary:#1c1c1c;
+    --color-background-secondary:#2a2a2a;
+    --color-text-primary:#f0f0f0;
+    --color-text-secondary:#9a9a9a;
+    --color-border-tertiary:rgba(255,255,255,0.12);
+    --color-border-secondary:rgba(255,255,255,0.22);
+    --color-border-primary:rgba(255,255,255,0.35);
+  }
+  body{background:#1c1c1c;color:#f0f0f0}
+}
+select{width:100%;padding:10px 12px;font-size:15px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);cursor:pointer;margin-bottom:1.5rem}
+.btn{display:inline-block;padding:10px 20px;font-size:14px;font-weight:500;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);cursor:pointer;transition:background 0.15s}
+.btn:hover{background:var(--color-background-secondary)}
+.btn-primary{background:#1D9E75;color:#E1F5EE;border-color:#0F6E56}
+.btn-primary:hover{background:#0F6E56}
+.screen{display:none}.screen.active{display:block}
+.section-title{font-size:16px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.muted{font-size:13px;color:var(--color-text-secondary);margin-bottom:1rem}
+.months-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:1.5rem}
+.month-title{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.day-hdr{font-size:10px;font-weight:500;color:var(--color-text-secondary);text-align:center;padding:2px 0}
+.day-cell{aspect-ratio:1;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:var(--color-background-primary);transition:background 0.1s,border-color 0.1s;gap:1px;position:relative}
+.day-cell:hover{border-color:var(--color-border-primary)}
+.day-cell.empty{background:transparent;border-color:transparent;cursor:default}
+.day-cell .dn{font-size:9px;color:var(--color-text-secondary);line-height:1}
+.day-cell .dd{font-size:12px;font-weight:500;color:var(--color-text-primary);line-height:1}
+.day-cell.absent{background:#FAECE7;border-color:#F0997B}
+.day-cell.absent .dn,.day-cell.absent .dd{color:#993C1D}
+.day-cell.c0{background:var(--color-background-primary)}
+.day-cell.c1{background:#EAF3DE;border-color:#97C459}
+.day-cell.c2{background:#d4ecc0;border-color:#639922}
+.day-cell.c3{background:#FAEEDA;border-color:#EF9F27}
+.day-cell.c4{background:#f5d9a8;border-color:#BA7517}
+.day-cell.c5{background:#FAECE7;border-color:#F0997B}
+.day-cell.c6{background:#f5c4b3;border-color:#D85A30}
+.day-cell.c7plus{background:#f09595;border-color:#E24B4A}
+.day-cell.c1 .dn,.day-cell.c1 .dd,.day-cell.c2 .dn,.day-cell.c2 .dd{color:#3B6D11}
+.day-cell.c3 .dn,.day-cell.c3 .dd,.day-cell.c4 .dn,.day-cell.c4 .dd{color:#854F0B}
+.day-cell.c5 .dn,.day-cell.c5 .dd,.day-cell.c6 .dn,.day-cell.c6 .dd,.day-cell.c7plus .dn,.day-cell.c7plus .dd{color:#993C1D}
+.day-cell .cnt{font-size:9px;font-weight:500;line-height:1}
+.day-cell.c0 .cnt{color:var(--color-text-secondary)}
+.day-cell.c1 .cnt,.day-cell.c2 .cnt{color:#3B6D11}
+.day-cell.c3 .cnt,.day-cell.c4 .cnt{color:#854F0B}
+.day-cell.c5 .cnt,.day-cell.c6 .cnt,.day-cell.c7plus .cnt{color:#993C1D}
+.tooltip{position:absolute;z-index:50;background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:8px 10px;font-size:12px;color:var(--color-text-primary);white-space:nowrap;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,0.12);display:none;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%)}
+.tooltip.show{display:block}
+.tooltip .t-date{font-weight:500;margin-bottom:4px;color:var(--color-text-primary)}
+.tooltip .t-name{color:var(--color-text-secondary);line-height:1.6}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--color-text-secondary);margin-bottom:1rem;align-items:center}
+.leg-item{display:flex;align-items:center;gap:4px}
+.leg-box{width:12px;height:12px;border-radius:2px;border:0.5px solid transparent}
+.status-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.badge{font-size:12px;padding:3px 8px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.badge.done{background:#EAF3DE;color:#3B6D11}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px}
+.metric .mlabel{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
+.metric .mval{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.best-block{background:#EAF3DE;border-radius:var(--border-radius-md);padding:10px 14px;font-size:13px;color:#3B6D11;margin-bottom:1.5rem;line-height:1.8}
+.toast-msg{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 14px;font-size:13px;color:var(--color-text-primary);margin-top:1rem;display:none}
+@media(prefers-color-scheme:dark){
+.day-cell.absent{background:#3a1a10;border-color:#D85A30}
+.day-cell.absent .dn,.day-cell.absent .dd{color:#F0997B}
+.day-cell.c1{background:#1a2e10;border-color:#639922}
+.day-cell.c2{background:#1f3a10;border-color:#639922}
+.day-cell.c3{background:#2a1e00;border-color:#BA7517}
+.day-cell.c4{background:#331d00;border-color:#BA7517}
+.day-cell.c5{background:#3a1a10;border-color:#D85A30}
+.day-cell.c6{background:#401510;border-color:#D85A30}
+.day-cell.c7plus{background:#4a1010;border-color:#E24B4A}
+.day-cell.c1 .dn,.day-cell.c1 .dd,.day-cell.c2 .dn,.day-cell.c2 .dd,.day-cell.c1 .cnt,.day-cell.c2 .cnt{color:#97C459}
+.day-cell.c3 .dn,.day-cell.c3 .dd,.day-cell.c4 .dn,.day-cell.c4 .dd,.day-cell.c3 .cnt,.day-cell.c4 .cnt{color:#EF9F27}
+.day-cell.c5 .dn,.day-cell.c5 .dd,.day-cell.c6 .dn,.day-cell.c6 .dd,.day-cell.c7plus .dn,.day-cell.c7plus .dd,.day-cell.c5 .cnt,.day-cell.c6 .cnt,.day-cell.c7plus .cnt{color:#F0997B}
+.best-block{background:#1a2e10;color:#97C459}
+.btn-primary{background:#085041;color:#9FE1CB;border-color:#0F6E56}
+.badge.done{background:#1a2e10;color:#97C459}
+}
+@media(max-width:600px){
+  .months-row{grid-template-columns:1fr}
+  .metric-row{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<div style="padding:1rem 0">
+
+<div id="s-home" class="screen active">
+  <div class="section-title">Zomervakantie 2026</div>
+  <p class="muted">Selecteer je naam en vul je afwezigheid in</p>
+  <select id="name-sel"><option value="">-- Kies je naam --</option></select>
+  <div id="status-bar" class="status-bar"></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <button class="btn btn-primary" onclick="goToCalendar()">Mijn afwezigheid invullen</button>
+    <button class="btn" onclick="goToOverview()">Bekijk groepsoverzicht</button>
+  </div>
+  <div id="home-toast" class="toast-msg"></div>
+</div>
+
+<div id="s-cal" class="screen">
+  <button class="btn" style="margin-bottom:1rem;font-size:13px" onclick="goHome()">← Terug</button>
+  <div class="section-title" id="cal-name"></div>
+  <p class="muted">Klik op de dagen waarop je niet beschikbaar bent</p>
+  <div class="legend">
+    <div class="leg-item"><div class="leg-box" style="background:#FAECE7;border-color:#F0997B"></div><span style="color:#993C1D">Afwezig</span></div>
+    <div class="leg-item"><div class="leg-box" style="background:var(--color-background-primary);border-color:var(--color-border-tertiary)"></div><span>Beschikbaar</span></div>
+  </div>
+  <div class="months-row">
+    <div><div class="month-title">Juli 2026</div><div id="cal-jul" class="cal-grid"></div></div>
+    <div><div class="month-title">Augustus 2026</div><div id="cal-aug" class="cal-grid"></div></div>
+  </div>
+  <button class="btn btn-primary" onclick="saveData()">Opslaan</button>
+  <div id="cal-toast" class="toast-msg"></div>
+</div>
+
+<div id="s-overview" class="screen">
+  <button class="btn" style="margin-bottom:1rem;font-size:13px" onclick="goHome()">← Terug</button>
+  <div class="section-title">Groepsoverzicht</div>
+  <p class="muted">Beweeg je cursor over een dag om te zien wie er niet kan</p>
+  <div id="ov-metrics" class="metric-row"></div>
+  <div style="font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px">Beste periodes</div>
+  <div id="ov-best" class="best-block"></div>
+  <div class="legend" id="ov-legend"></div>
+  <div class="months-row">
+    <div><div class="month-title">Juli 2026</div><div id="ov-jul" class="cal-grid"></div></div>
+    <div><div class="month-title">Augustus 2026</div><div id="ov-aug" class="cal-grid"></div></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const NAMES=['Stiller','Jasper Jr','Roy','Cooper','Vlees','Han Engel','Pier','Baal','Zakkie','Vien','Roch','Dorus','Rabbit Ruben','Pas'];
+const DAYS=['ma','di','wo','do','vr','za','zo'];
+const STORAGE_KEY='vakantie2026_v1';
+let data={};
+let currentPerson=null;
+let currentAbsent={};
+
+const sel=document.getElementById('name-sel');
+NAMES.forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=n;sel.appendChild(o)});
+
+function loadData(){
+  try{const raw=localStorage.getItem(STORAGE_KEY);if(raw)data=JSON.parse(raw);}catch(e){data={};}
+  renderStatusBar();
+}
+
+function saveData(){
+  data[currentPerson]=Object.keys(currentAbsent);
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));}catch(e){}
+  showToast('cal-toast','Opgeslagen voor '+currentPerson+'!');
+  setTimeout(()=>goHome(),1200);
+}
+
+function showToast(id,msg){const t=document.getElementById(id);t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2500);}
+
+function renderStatusBar(){
+  const bar=document.getElementById('status-bar');
+  bar.innerHTML=NAMES.map(n=>`<span class="badge${data[n]!==undefined?' done':''}">${n}</span>`).join('');
+}
+
+function screen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function goHome(){loadData();screen('s-home');}
+
+function goToCalendar(){
+  const name=sel.value;
+  if(!name){showToast('home-toast','Selecteer eerst je naam.');return;}
+  currentPerson=name;
+  currentAbsent={};
+  if(data[name])data[name].forEach(k=>currentAbsent[k]=true);
+  document.getElementById('cal-name').textContent=name;
+  buildPersonCal(2026,7,'cal-jul');
+  buildPersonCal(2026,8,'cal-aug');
+  screen('s-cal');
+}
+
+function buildPersonCal(year,month,id){
+  const el=document.getElementById(id);
+  el.innerHTML='';
+  DAYS.forEach(d=>{const h=document.createElement('div');h.className='day-hdr';h.textContent=d;el.appendChild(h);});
+  const first=getFirstDay(year,month);
+  const total=getDays(year,month);
+  for(let i=0;i<first;i++){const e=document.createElement('div');e.className='day-cell empty';el.appendChild(e);}
+  for(let d=1;d<=total;d++){
+    const key=makeKey(year,month,d);
+    const dow=DAYS[(new Date(year,month-1,d).getDay()+6)%7];
+    const cell=document.createElement('div');
+    cell.className='day-cell'+(currentAbsent[key]?' absent':'');
+    cell.innerHTML=`<span class="dn">${dow}</span><span class="dd">${d}</span>`;
+    cell.onclick=()=>{
+      if(currentAbsent[key]){delete currentAbsent[key];cell.classList.remove('absent');}
+      else{currentAbsent[key]=true;cell.classList.add('absent');}
+    };
+    el.appendChild(cell);
+  }
+}
+
+function goToOverview(){renderOverview();screen('s-overview');}
+
+function getAbsentNames(key){return NAMES.filter(n=>data[n]&&data[n].includes(key));}
+function getCount(key){return getAbsentNames(key).length;}
+function colorClass(c){return c===0?'c0':c===1?'c1':c===2?'c2':c===3?'c3':c===4?'c4':c===5?'c5':c===6?'c6':'c7plus';}
+
+function buildOverviewCal(year,month,id){
+  const el=document.getElementById(id);
+  el.innerHTML='';
+  DAYS.forEach(d=>{const h=document.createElement('div');h.className='day-hdr';h.textContent=d;el.appendChild(h);});
+  const first=getFirstDay(year,month);
+  const total=getDays(year,month);
+  for(let i=0;i<first;i++){const e=document.createElement('div');e.className='day-cell empty';el.appendChild(e);}
+  for(let d=1;d<=total;d++){
+    const key=makeKey(year,month,d);
+    const dow=DAYS[(new Date(year,month-1,d).getDay()+6)%7];
+    const absentNames=getAbsentNames(key);
+    const c=absentNames.length;
+    const cell=document.createElement('div');
+    cell.className=`day-cell ${colorClass(c)}`;
+    cell.innerHTML=`<span class="dn">${dow}</span><span class="dd">${d}</span>${c>0?`<span class="cnt">${c}</span>`:''}`;
+    const tip=document.createElement('div');
+    tip.className='tooltip';
+    const mname=month===7?'juli':'aug';
+    tip.innerHTML=`<div class="t-date">${dow} ${d} ${mname}</div><div class="t-name">${c===0?'Iedereen beschikbaar':absentNames.join('<br>')}</div>`;
+    cell.appendChild(tip);
+    cell.addEventListener('mouseenter',()=>tip.classList.add('show'));
+    cell.addEventListener('mouseleave',()=>tip.classList.remove('show'));
+    el.appendChild(cell);
+  }
+}
+
+function renderOverview(){
+  const julDays=getAllDays(2026,7);
+  const augDays=getAllDays(2026,8);
+  const allDays=[...julDays,...augDays];
+  const filled=NAMES.filter(n=>data[n]!==undefined).length;
+  const counts=allDays.map(k=>getCount(k));
+  const maxC=counts.length?Math.max(...counts):0;
+  const total=counts.reduce((a,b)=>a+b,0);
+  document.getElementById('ov-metrics').innerHTML=`
+    <div class="metric"><div class="mlabel">Ingevuld</div><div class="mval">${filled}/${NAMES.length}</div></div>
+    <div class="metric"><div class="mlabel">Max afwezig (dag)</div><div class="mval">${maxC}</div></div>
+    <div class="metric"><div class="mlabel">Totaal afwezig-dagen</div><div class="mval">${total}</div></div>`;
+  const sorted=[...allDays].sort((a,b)=>getCount(a)-getCount(b));
+  const best=sorted.slice(0,6).map(k=>{
+    const[y,m,d]=k.split('-');
+    const dow=DAYS[(new Date(+y,+m-1,+d).getDay()+6)%7];
+    return `${dow} ${parseInt(d)} ${m==='07'?'jul':'aug'} — ${getCount(k)} afwezig`;
+  });
+  document.getElementById('ov-best').innerHTML=best.length?best.join('<br>'):'Nog geen data';
+  document.getElementById('ov-legend').innerHTML=`
+    <div class="leg-item"><div class="leg-box" style="background:#EAF3DE;border-color:#97C459"></div><span>1–2</span></div>
+    <div class="leg-item"><div class="leg-box" style="background:#FAEEDA;border-color:#EF9F27"></div><span>3–4</span></div>
+    <div class="leg-item"><div class="leg-box" style="background:#FAECE7;border-color:#F0997B"></div><span>5–6</span></div>
+    <div class="leg-item"><div class="leg-box" style="background:#f09595;border-color:#E24B4A"></div><span>7+</span></div>
+    <div class="leg-item"><div class="leg-box" style="background:var(--color-background-primary);border-color:var(--color-border-tertiary)"></div><span>0 afwezig</span></div>`;
+  buildOverviewCal(2026,7,'ov-jul');
+  buildOverviewCal(2026,8,'ov-aug');
+}
+
+function makeKey(y,m,d){return y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
+function getDays(y,m){return new Date(y,m,0).getDate();}
+function getFirstDay(y,m){let d=new Date(y,m-1,1).getDay();return d===0?6:d-1;}
+function getAllDays(y,m){const days=[];const n=getDays(y,m);for(let d=1;d<=n;d++)days.push(makeKey(y,m,d));return days;}
+
+loadData();
+</script>
+</body>
+</html>
